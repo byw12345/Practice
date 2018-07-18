@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Lucky_Dip.cpp">
+    <ClCompile Include="ScrambledWords.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
