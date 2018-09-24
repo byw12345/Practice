@@ -7,6 +7,8 @@
 #include <set>
 #include <map>
 #include <algorithm>
+#include <queue>
+#include <stack>
 
 using namespace std;
 
@@ -143,8 +145,37 @@ void csvPaser(string input) {
 	cout << result << endl;
 }
 
-void wizzard(vector<vector<int>> &input) {
-
+void wizzard(vector<unordered_set<int>> &input) {
+	int n = input.size();
+	vector<bool> visit(n, false);
+	vector<long long int> dis(n, INT_MAX);
+	vector<int> pre(n, -1);
+	dis[0] = 0;
+	visit[0] = true;
+	queue<int> q;
+	q.push(0);
+	while (!q.empty()) {
+		auto f = q.front();
+		q.pop();
+		visit[f] = false;
+		for (auto t : input[f]) {
+			if (dis[t] > dis[f] + (f - t) * (f - t)) {
+				dis[t] = dis[f] + (f - t) * (f - t);
+				pre[t] = f;
+				if (visit[t] == false) {
+					visit[t] = true;
+					q.push(t);
+				}
+			}
+		}
+	}
+	cout << dis[9] << endl;
+	int i = 9;
+	while (i != -1) {
+		cout << i << " ";
+		i = pre[i];
+	}
+	cout << endl;
 }
 
 long long ipToint(string ip) {
@@ -186,6 +217,35 @@ void ipToCidr(string startIP, string endIP) {
 	cout << endl;
 }
 
+double search(vector<int> input, int k) {
+	long long int left = INT_MIN, right = INT_MAX;
+	while (left < right) {
+		long long guess = left + (right - left) / 2, count = 0, res = left;
+		for (long long num : input) {
+			if (num <= guess) {
+				count++;
+				res = max(num, res);
+			}
+		}
+		if (count == k)
+			return res;
+		else if (count < k)
+			left = guess + 1;
+		else right = res;
+	}
+	return left;
+}
+
+void findMedian(vector<int> input) {
+	int n = 0;
+	for (int i : input)
+		n++;
+	if (n % 2 == 1)
+		cout << search(input, n / 2 + 1) << endl;
+	else
+		cout << (search(input, n / 2 + 1) + search(input, n / 2)) / 2 << endl;
+}
+
 int main() {
 	//vector<vector<int>> edges = { {2,9},{3,3},{3,5},{3,7},{4,8},{5,8},{6,6},{7,4},{8,7},{9,3},{9,6} };
 	//traverse(edges);
@@ -198,7 +258,10 @@ int main() {
 		csvPaser(s);
 	}*/
 	//ipToCidr("255.0.0.7", "255.0.0.16");
-	vector<vector<int>> wizzards = { {1, 5, 9}, {2, 3, 9}, {4}, {}, {}, {9}, {}, {}, {}, {} };
+	/*vector<unordered_set<int>> wizzards = { {1, 5, 9}, {2, 3, 9}, {4}, {}, {}, {9}, {}, {}, {}, {} };
+	wizzard(wizzards);*/
+	vector<int> nums = { -100, 99, 3, 0, 5, 7, 11, 66, -33 };
+	findMedian(nums);
 	system("pause");
 	return 0;
 }
